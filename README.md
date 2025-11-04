@@ -42,49 +42,51 @@ Note: Per the instructions, no changes were made to anything under `lib/` while 
 
 ---
 
-## 3) App screenshots
+## 🖼️ 3) App Screenshots
 
-Click any link to open the image in the repository directly:
+Below are direct previews of the app screens:
 
-- [Home screen screenshot](./screenshots/homeScreen.png)
-- [Calendar screenshot](./screenshots/calendar.png)
-- [Mood screen screenshot](./screenshots/moodScreen.png)
-- [Plan screen screenshot](./screenshots/planScreen.png)
+### 🏠 Home Screen
+![Home Screen](./screenshots/homeScreen.png)
 
-Or view the whole screenshots folder on GitHub (after pushing):
+### 📅 Calendar Screen
+![Calendar Screen](./screenshots/calendar.png)
 
-- [Screenshots folder](./screenshots/)
+### 😊 Mood Screen
+![Mood Screen](./screenshots/moodScreen.png)
 
----
-
-## 4) App video
-
-- Demo video (screen recording): [Watch App Demo Video](./recording/appDemo.mp4)
-
-This file is included in the repository under the `recording/` folder so reviewers can play it directly from GitHub.
+### 📋 Plan Screen
+![Plan Screen](./screenshots/planScreen.png)
 
 ---
 
-## 5) App APK
+## 🎥 4) App Demo Video
 
-- Download APK for testing (Android):
-[Download APK (Google Drive)](https://drive.google.com/file/d/118lrnmwS3Tkwvzo11CsKiOOyH0sN9GEx/view?usp=drive_link)
+You can **watch the screen recording directly below** ⬇️
+
+https://github.com/your-username/evencir_task/raw/main/recording/appDemo.mp4
+
+*(If the above video doesn’t autoplay, click it to open directly in GitHub or download it.)*
 
 ---
 
-## How to run (quick)
+## 📱 5) App APK
 
-Requirements: Flutter SDK installed and configured, Android SDK for Android builds.
+You can test the app by downloading the APK from Google Drive:
 
-From the project root you can run:
+👉 [**Download APK (Google Drive)**](https://drive.google.com/file/d/118lrnmwS3Tkwvzo11CsKiOOyH0sN9GEx/view?usp=drive_link)
+
+---
+
+## ⚙️ 6) How to run
+
+Make sure Flutter SDK and Android SDK are properly installed.
+
+Run the following commands from the project root:
 
 ```bash
 flutter pub get
-flutter run        # Runs on connected device or emulator
+flutter run        # Run the app on emulator or connected device
 flutter build apk  # Build release APK
-```
-
----
-
 
 
