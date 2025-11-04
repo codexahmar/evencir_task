@@ -44,28 +44,30 @@ Note: Per the instructions, no changes were made to anything under `lib/` while 
 
 ## 🖼️ 3) App Screenshots
 
-Below are direct previews of the app screens:
+
+Below are direct previews of the app screens (all screenshots are shown at a smaller size for readability):
 
 ### 🏠 Home Screen
-![Home Screen](./screenshots/homeScreen.png)
+<img src="./screenshots/homeScreen.png" alt="Home Screen" width="300" height="600" />
 
 ### 📅 Calendar Screen
-![Calendar Screen](./screenshots/calendar.png)
+<img src="./screenshots/calendar.png" alt="Calendar Screen" width="300" height="600" />
 
 ### 😊 Mood Screen
-![Mood Screen](./screenshots/moodScreen.png)
+<img src="./screenshots/moodScreen.png" alt="Mood Screen" width="300" height="600" />
 
 ### 📋 Plan Screen
-![Plan Screen](./screenshots/planScreen.png)
+<img src="./screenshots/planScreen.png" alt="Plan Screen" width="300" height="600" />
 
 ---
 
 ## 🎥 4) App Demo Video
 
+
 You can **watch the screen recording directly below** ⬇️
 
-<video src="./recording/appDemo.mp4" controls width="400">
-  Your browser does not support the video tag.
+<video src="./recording/appDemo.mp4" controls autoplay loop muted playsinline width="400" height="800">
+	Your browser does not support the video tag.
 </video>
 
 *(If the above video doesn’t autoplay, click it to open directly in GitHub or download it.)*
