@@ -64,7 +64,9 @@ Below are direct previews of the app screens:
 
 You can **watch the screen recording directly below** ⬇️
 
-https://github.com/your-username/evencir_task/raw/main/recording/appDemo.mp4
+<video src="./recording/appDemo.mp4" controls width="400">
+  Your browser does not support the video tag.
+</video>
 
 *(If the above video doesn’t autoplay, click it to open directly in GitHub or download it.)*
 
