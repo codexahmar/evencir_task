@@ -66,9 +66,9 @@ Below are direct previews of the app screens (all screenshots are shown at a sma
 
 You can **watch the screen recording directly below** ⬇️
 
-<video src="./recording/appDemo.mp4" controls autoplay loop muted playsinline width="400" height="800">
+[<video src="./recording/appDemo.mp4" controls autoplay loop muted playsinline width="400" height="800">
 	Your browser does not support the video tag.
-</video>
+</video>](https://github.com/user-attachments/assets/ff4c6c6a-3b4c-49ee-9733-fb44954bc421)
 
 *(If the above video doesn’t autoplay, click it to open directly in GitHub or download it.)*
 
