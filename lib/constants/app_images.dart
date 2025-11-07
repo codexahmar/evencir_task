@@ -13,6 +13,7 @@ class AppImages {
   static const String profileIcon = "assets/icons/profile.png";
   static const String statIcon = "assets/icons/stat_icon.png";
   static const String sunIcon = "assets/icons/sun_icon.png";
+  static const String moon = "assets/icons/moon.png";
 
   // Images
 

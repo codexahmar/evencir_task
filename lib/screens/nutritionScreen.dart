@@ -2,11 +2,8 @@ import 'package:evencir_task/constants/app_images.dart';
 import 'package:evencir_task/constants/app_text_styles.dart';
 import 'package:evencir_task/constants/app_texts.dart';
 import 'package:evencir_task/utils/calendar_utils.dart';
-
 import 'package:evencir_task/widgets/appbar_widget.dart';
-
 import 'package:evencir_task/widgets/minicalendar_widget.dart';
-
 import 'package:evencir_task/widgets/calories_card_widget.dart';
 import 'package:evencir_task/widgets/weight_card_widget.dart';
 import 'package:evencir_task/widgets/hydration_card_widget.dart';
@@ -25,7 +22,6 @@ class _NutritionScreenState extends State<NutritionScreen> {
   DateTime focusedDay = DateTime.now();
   DateTime selectedDay = DateTime.now();
 
-  /// Helper to get the 7 days of the current week
   List<DateTime> get currentWeekDays =>
       CalendarUtils.getCurrentWeekDays(focusedDay);
 
@@ -37,6 +33,18 @@ class _NutritionScreenState extends State<NutritionScreen> {
         screenHeight -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
+    String getTimeBasedIcon() {
+      final hour = DateTime.now().hour;
+
+      // Day time: 6 AM to 6 PM (6-17)
+      if (hour >= 6 && hour < 18) {
+        return AppImages.sunIcon;
+      }
+      // Night time: 6 PM to 6 AM (18-5)
+      else {
+        return AppImages.moon;
+      }
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFF000000),
@@ -54,7 +62,16 @@ class _NutritionScreenState extends State<NutritionScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppBarWidget(),
+                      AppBarWidget(
+                        selectedDay: selectedDay,
+                        focusedDay: focusedDay,
+                        onDaySelected: (selected, focused) {
+                          setState(() {
+                            selectedDay = selected;
+                            focusedDay = focused;
+                          });
+                        },
+                      ),
 
                       SizedBox(height: safeAreaHeight * 0.02),
 
@@ -98,7 +115,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
                           Row(
                             children: [
                               Image.asset(
-                                AppImages.sunIcon,
+                                getTimeBasedIcon(),
                                 width: screenWidth * 0.06,
                                 height: screenWidth * 0.06,
                               ),

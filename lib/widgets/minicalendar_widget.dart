@@ -20,7 +20,10 @@ class MiniCalendarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final safeAreaHeight = screenHeight - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
+    final safeAreaHeight =
+        screenHeight -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
 
     return GestureDetector(
       onVerticalDragUpdate: (details) {
@@ -70,10 +73,7 @@ class MiniCalendarWidget extends StatelessWidget {
                       color: const Color(0xFFEBEBEB).withOpacity(0.15),
                       shape: BoxShape.circle,
                       border: isSelected
-                          ? Border.all(
-                              color: const Color(0xFF00C896),
-                              width: 2,
-                            )
+                          ? Border.all(color: const Color(0xFF00C896), width: 2)
                           : null,
                     ),
                     child: Text(

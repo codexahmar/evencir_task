@@ -1,18 +1,25 @@
 import 'package:evencir_task/constants/app_images.dart';
 import 'package:evencir_task/constants/app_text_styles.dart';
 import 'package:evencir_task/constants/app_texts.dart';
+import 'package:evencir_task/utils/workout_utils.dart';
 import 'package:evencir_task/widgets/weekInfoSection.dart';
 import 'package:evencir_task/widgets/workoutContainer.dart';
 import 'package:flutter/material.dart';
 
-class PlanScreen extends StatelessWidget {
+class PlanScreen extends StatefulWidget {
   const PlanScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+  State<PlanScreen> createState() => _PlanScreenState();
+}
 
-    final List<Map<String, dynamic>> weekDays = [
+class _PlanScreenState extends State<PlanScreen> {
+  late List<Map<String, dynamic>> weekDays;
+
+  @override
+  void initState() {
+    super.initState();
+    weekDays = [
       {
         "day": AppTexts.mon,
         "date": "8",
@@ -39,6 +46,21 @@ class PlanScreen extends StatelessWidget {
       {"day": AppTexts.sat, "date": "13", "hasWorkout": false},
       {"day": AppTexts.sun, "date": "14", "hasWorkout": false},
     ];
+  }
+
+  void moveWorkout(int fromIndex, int toIndex) {
+    setState(() {
+      WorkoutUtils.moveWorkout(
+        weekDays: weekDays,
+        fromIndex: fromIndex,
+        toIndex: toIndex,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: const Color(0xFF000000),
@@ -64,7 +86,6 @@ class PlanScreen extends StatelessWidget {
       body: Column(
         children: [
           const Divider(thickness: 2, color: Color(0xFF4855DF)),
-
           WeekInfoSection(
             screenHeight: screenHeight,
             contextRef: context,
@@ -72,7 +93,6 @@ class PlanScreen extends StatelessWidget {
             dateRange: AppTexts.weekTwoDateRange,
             totalTime: AppTexts.total60Min,
           ),
-
           Expanded(
             child: ListView.separated(
               itemCount: weekDays.length + 1,
@@ -87,7 +107,6 @@ class PlanScreen extends StatelessWidget {
                   endIndent: 16,
                 );
               },
-
               itemBuilder: (context, index) {
                 if (index == weekDays.length) {
                   return Column(
@@ -107,57 +126,115 @@ class PlanScreen extends StatelessWidget {
                 final day = weekDays[index];
                 final hasWorkout = day["hasWorkout"] ?? false;
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                    horizontal: 16.0,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            day["day"],
-                            style: AppTextStyles.custom(
-                              context: context,
-                              color: Colors.white.withOpacity(
-                                hasWorkout ? 1 : 0.3,
-                              ),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            day["date"],
-                            style: AppTextStyles.custom(
-                              context: context,
-                              color: Colors.white.withOpacity(
-                                hasWorkout ? 1 : 0.3,
-                              ),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 16),
+                return DragTarget<int>(
+                  onAcceptWithDetails: (details) {
+                    final fromIndex = details.data;
+                    if (fromIndex != index) {
+                      moveWorkout(fromIndex, index);
+                    }
+                  },
+                  builder: (context, candidateData, rejectedData) {
+                    final isHovering = candidateData.isNotEmpty;
 
-                      if (hasWorkout)
-                        Expanded(
-                          child: WorkoutContainer(
-                            context: context,
-                            type: day["workoutType"],
-                            color: day["workoutColor"],
-                            iconPath: day["icon"],
-                            title: day["title"],
-                            duration: day["duration"],
-                          ),
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: isHovering
+                            ? Colors.blue.withOpacity(0.1)
+                            : Colors.transparent,
+                        border: isHovering
+                            ? Border.all(
+                                color: const Color(0xFF4855DF),
+                                width: 2,
+                              )
+                            : null,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16.0,
                         ),
-                    ],
-                  ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  day["day"],
+                                  style: AppTextStyles.custom(
+                                    context: context,
+                                    color: Colors.white.withOpacity(
+                                      hasWorkout ? 1 : 0.3,
+                                    ),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  day["date"],
+                                  style: AppTextStyles.custom(
+                                    context: context,
+                                    color: Colors.white.withOpacity(
+                                      hasWorkout ? 1 : 0.3,
+                                    ),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 16),
+                            if (hasWorkout)
+                              Expanded(
+                                child: LongPressDraggable<int>(
+                                  data: index,
+                                  feedback: Material(
+                                    color: Colors.transparent,
+                                    child: Opacity(
+                                      opacity: 0.8,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                            100,
+                                        child: WorkoutContainer(
+                                          context: context,
+                                          type: day["workoutType"],
+                                          color: day["workoutColor"],
+                                          iconPath: day["icon"],
+                                          title: day["title"],
+                                          duration: day["duration"],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  childWhenDragging: Opacity(
+                                    opacity: 0.3,
+                                    child: WorkoutContainer(
+                                      context: context,
+                                      type: day["workoutType"],
+                                      color: day["workoutColor"],
+                                      iconPath: day["icon"],
+                                      title: day["title"],
+                                      duration: day["duration"],
+                                    ),
+                                  ),
+                                  child: WorkoutContainer(
+                                    context: context,
+                                    type: day["workoutType"],
+                                    color: day["workoutColor"],
+                                    iconPath: day["icon"],
+                                    title: day["title"],
+                                    duration: day["duration"],
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
