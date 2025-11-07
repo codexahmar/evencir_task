@@ -78,7 +78,7 @@ You can **watch the screen recording directly below** ⬇️
 
 You can test the app by downloading the APK from Google Drive:
 
-👉 [**Download APK (Google Drive)**](https://drive.google.com/file/d/118lrnmwS3Tkwvzo11CsKiOOyH0sN9GEx/view?usp=drive_link)
+👉 [**Download APK (Google Drive)**](https://drive.google.com/file/d/1N1DGwk9FaUM7rpdr-DKUzCn5CyRksxG_/view?usp=drive_link)
 
 ---
 
