@@ -1,5 +1,5 @@
 class AppImages {
-  //  Icons
+  // Icons
   static const String arrowIcon = "assets/icons/arrow_icon.png";
   static const String bellIcon = "assets/icons/bell.png";
   static const String diceIcon = "assets/icons/dice_icon.png";
@@ -16,9 +16,9 @@ class AppImages {
   static const String moon = "assets/icons/moon.png";
 
   // Images
-
   static const String calmImage = "assets/images/calm.png";
   static const String contentImage = "assets/images/content.png";
   static const String happyImage = "assets/images/happy.png";
   static const String peacefulImage = "assets/images/peaceful.png";
+  static const String profileImage = "assets/images/profile.jpeg";
 }

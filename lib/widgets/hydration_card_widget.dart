@@ -1,4 +1,5 @@
 import 'package:evencir_task/constants/app_colors.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -32,7 +33,11 @@ class _HydrationCardWidgetState extends State<HydrationCardWidget> {
         ),
         content: Row(
           children: [
-            const Icon(Icons.water_drop_rounded, color: Color(0xFF48A4E5), size: 18),
+            const Icon(
+              Icons.water_drop_rounded,
+              color: Color(0xFF48A4E5),
+              size: 18,
+            ),
             const SizedBox(width: 8),
             Text(
               "+$amount ml added to water log ($currentMl / $targetMl ml)",
@@ -49,11 +54,16 @@ class _HydrationCardWidgetState extends State<HydrationCardWidget> {
     final double percentage = (currentMl / targetMl).clamp(0.0, 1.0);
     final int percentInt = (percentage * 100).toInt();
 
+    // Dynamic wave spots based on intake
+    final double p1 = (currentMl * 0.25).clamp(0, 700).toDouble();
+    final double p2 = (currentMl * 0.60).clamp(0, 1500).toDouble();
+    final double p3 = currentMl.toDouble();
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.07),
           width: 1,
@@ -71,11 +81,11 @@ class _HydrationCardWidgetState extends State<HydrationCardWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Left Column: Percentage & Title
+                // Left Column: Hydration Numbers & Quick Actions
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +99,7 @@ class _HydrationCardWidgetState extends State<HydrationCardWidget> {
                             "$percentInt%",
                             style: GoogleFonts.manrope(
                               color: const Color(0xFF48A4E5),
-                              fontSize: 30,
+                              fontSize: 32,
                               fontWeight: FontWeight.w800,
                               letterSpacing: -1,
                             ),
@@ -117,7 +127,7 @@ class _HydrationCardWidgetState extends State<HydrationCardWidget> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 12),
 
                       // Quick Add Buttons
                       Row(
@@ -137,92 +147,177 @@ class _HydrationCardWidgetState extends State<HydrationCardWidget> {
                   ),
                 ),
 
-                // Right Column: Stylized Hydration Level Gauge
+                const SizedBox(width: 12),
+
+                // Right Column: Smooth Fluid Wave Chart (FL Chart)
                 Container(
-                  width: 90,
-                  height: 78,
-                  padding: const EdgeInsets.all(8),
+                  width: 116,
+                  height: 104,
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
                   decoration: BoxDecoration(
                     color: const Color(0xFF101C24),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: const Color(0xFF48A4E5).withValues(alpha: 0.2),
                     ),
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "2.5L",
-                            style: GoogleFonts.mulish(
-                              color: Colors.white.withValues(alpha: 0.5),
-                              fontSize: 9,
-                              fontWeight: FontWeight.w600,
+                          Expanded(
+                            child: Text(
+                              "TIMELINE",
+                              style: GoogleFonts.mulish(
+                                color: Colors.white.withValues(alpha: 0.45),
+                                fontSize: 8,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.5,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Icon(
+                          const Icon(
                             Icons.water_drop_rounded,
-                            size: 14,
-                            color: const Color(0xFF48A4E5).withValues(
-                              alpha: 0.8,
-                            ),
+                            size: 12,
+                            color: Color(0xFF48A4E5),
                           ),
                         ],
                       ),
-                      // Progress Bar Inside
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: 14,
-                              width: double.infinity,
-                              color: Colors.white.withValues(alpha: 0.08),
+                      const SizedBox(height: 4),
+
+                      // FL Chart Smooth Curve
+                      Expanded(
+                        child: LineChart(
+                          LineChartData(
+                            minX: 0,
+                            maxX: 3,
+                            minY: 0,
+                            maxY: targetMl.toDouble() * 1.1,
+                            lineTouchData: LineTouchData(
+                              enabled: true,
+                              touchTooltipData: LineTouchTooltipData(
+                                getTooltipColor: (touchedSpot) =>
+                                    const Color(0xFF16323B),
+                                tooltipPadding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 4,
+                                ),
+                                getTooltipItems: (touchedSpots) {
+                                  return touchedSpots.map((spot) {
+                                    return LineTooltipItem(
+                                      "${spot.y.toInt()} ml",
+                                      GoogleFonts.mulish(
+                                        color: const Color(0xFF7DD3FC),
+                                        fontSize: 9.5,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    );
+                                  }).toList();
+                                },
+                              ),
                             ),
-                            FractionallySizedBox(
-                              widthFactor: percentage,
-                              child: Container(
-                                height: 14,
-                                decoration: const BoxDecoration(
+                            gridData: FlGridData(
+                              show: true,
+                              drawVerticalLine: false,
+                              horizontalInterval: 1000,
+                              getDrawingHorizontalLine: (value) => FlLine(
+                                color: Colors.white.withValues(alpha: 0.04),
+                                strokeWidth: 1,
+                              ),
+                            ),
+                            titlesData: FlTitlesData(
+                              topTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              rightTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              leftTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  interval: 1,
+                                  getTitlesWidget: (value, meta) {
+                                    const titles = ["8A", "12P", "4P", "8P"];
+                                    final index = value.toInt();
+                                    if (index < 0 || index >= titles.length) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 2.0),
+                                      child: Text(
+                                        titles[index],
+                                        style: GoogleFonts.mulish(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.4,
+                                          ),
+                                          fontSize: 7.5,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            borderData: FlBorderData(show: false),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: [
+                                  FlSpot(0, p1),
+                                  FlSpot(1, p2),
+                                  FlSpot(2, p3),
+                                  FlSpot(3, p3),
+                                ],
+                                isCurved: true,
+                                curveSmoothness: 0.35,
+                                preventCurveOverShooting: true,
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF2196F3),
+                                    Color(0xFF00E5FF),
+                                  ],
+                                ),
+                                barWidth: 2.2,
+                                isStrokeCapRound: true,
+                                dotData: FlDotData(
+                                  show: true,
+                                  checkToShowDot: (spot, barData) =>
+                                      spot.x == 2, // Highlight current spot
+                                  getDotPainter:
+                                      (spot, percent, barData, index) =>
+                                          FlDotCirclePainter(
+                                            radius: 3.5,
+                                            color: const Color(0xFF00E5FF),
+                                            strokeWidth: 1.5,
+                                            strokeColor: Colors.white,
+                                          ),
+                                ),
+                                belowBarData: BarAreaData(
+                                  show: true,
                                   gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
                                     colors: [
-                                      Color(0xFF2196F3),
-                                      Color(0xFF00E5FF),
+                                      const Color(
+                                        0xFF00E5FF,
+                                      ).withValues(alpha: 0.32),
+                                      const Color(
+                                        0xFF2196F3,
+                                      ).withValues(alpha: 0.02),
                                     ],
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          duration: const Duration(milliseconds: 350),
+                          curve: Curves.easeInOut,
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "0L",
-                            style: GoogleFonts.mulish(
-                              color: Colors.white.withValues(alpha: 0.5),
-                              fontSize: 8.5,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Flexible(
-                            child: Text(
-                              "$currentMl ml",
-                              style: GoogleFonts.mulish(
-                                color: const Color(0xFF48A4E5),
-                                fontSize: 9.5,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
@@ -231,19 +326,18 @@ class _HydrationCardWidgetState extends State<HydrationCardWidget> {
             ),
           ),
 
-          // Bottom Bar
+          // Bottom Quick Log Bar
           InkWell(
             onTap: () => _addWater(250),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 9),
               decoration: const BoxDecoration(
                 color: Color(0xFF16323B),
                 border: Border(
                   top: BorderSide(color: Color(0x3348A4E5), width: 1),
                 ),
               ),
-              alignment: Alignment.center,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -283,7 +377,7 @@ class _QuickAddButton extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(6),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
         decoration: BoxDecoration(
           color: const Color(0xFF48A4E5).withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(6),
@@ -296,7 +390,7 @@ class _QuickAddButton extends StatelessWidget {
           label,
           style: GoogleFonts.mulish(
             color: const Color(0xFF7DD3FC),
-            fontSize: 11,
+            fontSize: 10.5,
             fontWeight: FontWeight.w700,
           ),
         ),

@@ -52,7 +52,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Training Calendar'), findsOneWidget);
-    expect(find.text('Arm Blaster'), findsOneWidget);
+    expect(find.text('Push Hypertrophy Blitz'), findsOneWidget);
     expect(find.text('Leg Day Blitz'), findsOneWidget);
   });
 
@@ -83,6 +83,7 @@ void main() {
     // Tap on Profile tab (index 3)
     await tester.tap(find.text('Profile'));
     await tester.pumpAndSettle();
-    expect(find.text('Active Targets'), findsOneWidget);
+    expect(find.text('codexahmar'), findsOneWidget);
+    expect(find.text('codexahmar@gmail.com'), findsOneWidget);
   });
 }

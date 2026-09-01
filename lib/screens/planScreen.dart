@@ -1,6 +1,7 @@
 import 'package:evencir_task/constants/app_colors.dart';
 import 'package:evencir_task/constants/app_images.dart';
 import 'package:evencir_task/constants/app_texts.dart';
+import 'package:evencir_task/utils/calendar_utils.dart';
 import 'package:evencir_task/utils/workout_utils.dart';
 import 'package:evencir_task/widgets/weekInfoSection.dart';
 import 'package:evencir_task/widgets/workoutContainer.dart';
@@ -16,64 +17,139 @@ class PlanScreen extends StatefulWidget {
 
 class _PlanScreenState extends State<PlanScreen> {
   late List<Map<String, dynamic>> weekDays;
+  late DateTime currentMonday;
+  late DateTime nextMonday;
+  late int currentWeekNumber;
+  late int totalWeeksInMonth;
+  late String currentWeekRange;
+  late String nextWeekRange;
 
   @override
   void initState() {
     super.initState();
-    weekDays = [
-      {
-        "day": AppTexts.mon,
-        "date": "8",
-        "hasWorkout": true,
-        "workoutType": AppTexts.armWorkout,
-        "workoutColor": const Color(0xFF20B76F),
-        "icon": AppImages.exerciseIcon,
-        "title": AppTexts.armBlaster,
-        "duration": AppTexts.workoutDuration,
-        "exercises": [
-          "Barbell Bicep Curls • 4 sets × 10 reps",
-          "Dumbbell Hammer Curls • 3 sets × 12 reps",
-          "Tricep Rope Pushdowns • 4 sets × 12 reps",
-          "Overhead Dumbbell Extension • 3 sets × 10 reps",
-        ],
-      },
-      {"day": AppTexts.tue, "date": "9", "hasWorkout": false},
-      {"day": AppTexts.wed, "date": "10", "hasWorkout": false},
-      {
-        "day": AppTexts.thu,
-        "date": "11",
-        "hasWorkout": true,
-        "workoutType": AppTexts.legWorkout,
-        "workoutColor": const Color(0xFF4855DF),
-        "icon": AppImages.legIcon,
-        "title": AppTexts.legDayBlitz,
-        "duration": AppTexts.workoutDuration,
-        "exercises": [
-          "Barbell Back Squats • 4 sets × 8 reps",
-          "Romanian Deadlifts • 3 sets × 10 reps",
-          "Leg Press • 4 sets × 12 reps",
-          "Standing Calf Raises • 4 sets × 15 reps",
-        ],
-      },
-      {"day": AppTexts.fri, "date": "12", "hasWorkout": false},
-      {
-        "day": AppTexts.sat,
-        "date": "13",
-        "hasWorkout": true,
-        "workoutType": AppTexts.coreWorkout,
-        "workoutColor": const Color(0xFFF99955),
-        "icon": AppImages.exerciseIcon,
-        "title": AppTexts.coreBurn,
-        "duration": "15m - 20m",
-        "exercises": [
-          "Plank Holds • 3 sets × 60 sec",
-          "Hanging Leg Raises • 3 sets × 15 reps",
-          "Russian Twists • 3 sets × 20 reps",
-          "Ab Wheel Rollouts • 3 sets × 12 reps",
-        ],
-      },
-      {"day": AppTexts.sun, "date": "14", "hasWorkout": false},
+    _initializeDynamicWeek();
+  }
+
+  void _initializeDynamicWeek() {
+    final now = DateTime.now();
+    currentMonday = now.subtract(Duration(days: now.weekday - 1));
+    nextMonday = currentMonday.add(const Duration(days: 7));
+
+    // Calculate Week number
+    final firstDayOfMonth = DateTime(now.year, now.month, 1);
+    currentWeekNumber =
+        ((currentMonday.day + firstDayOfMonth.weekday - 2) ~/ 7) + 1;
+    final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+    totalWeeksInMonth =
+        ((lastDayOfMonth.day + firstDayOfMonth.weekday - 2) ~/ 7) + 1;
+
+    final currentSunday = currentMonday.add(const Duration(days: 6));
+    final nextSunday = nextMonday.add(const Duration(days: 6));
+
+    final monthName = CalendarUtils.monthName(currentMonday.month);
+    currentWeekRange = "$monthName ${currentMonday.day}-${currentSunday.day}";
+    final nextMonthName = CalendarUtils.monthName(nextMonday.month);
+    nextWeekRange = "$nextMonthName ${nextMonday.day}-${nextSunday.day}";
+
+    const dayLabels = [
+      AppTexts.mon,
+      AppTexts.tue,
+      AppTexts.wed,
+      AppTexts.thu,
+      AppTexts.fri,
+      AppTexts.sat,
+      AppTexts.sun,
     ];
+
+    weekDays = List.generate(7, (index) {
+      final dayDate = currentMonday.add(Duration(days: index));
+      final dayLabel = dayLabels[index];
+
+      if (index == 0) {
+        // Monday - Push Workout
+        return {
+          "day": dayLabel,
+          "date": "${dayDate.day}",
+          "hasWorkout": true,
+          "workoutType": "Push Strength",
+          "workoutColor": const Color(0xFF00C896),
+          "icon": AppImages.exerciseIcon,
+          "title": "Push Hypertrophy Blitz",
+          "duration": "45m - 50m",
+          "exercises": [
+            "Incline Dumbbell Bench Press • 4 sets × 10 reps (32 kg)",
+            "Flat Barbell Bench Press • 4 sets × 8 reps (85 kg)",
+            "Standing Dumbbell Lateral Raises • 4 sets × 15 reps (12 kg)",
+            "Cable Chest Flyes (Low-to-High) • 3 sets × 12 reps (18 kg)",
+            "Overhead Rope Tricep Extensions • 4 sets × 12 reps (25 kg)",
+          ],
+        };
+      } else if (index == 1) {
+        // Tuesday - Pull Workout
+        return {
+          "day": dayLabel,
+          "date": "${dayDate.day}",
+          "hasWorkout": true,
+          "workoutType": "Pull Power",
+          "workoutColor": const Color(0xFF48A4E5),
+          "icon": AppImages.exerciseIcon,
+          "title": "Back & Biceps Thickness",
+          "duration": "40m - 45m",
+          "exercises": [
+            "Weighted Wide-Grip Pull-ups • 4 sets × 6 reps (+15 kg)",
+            "Barbell Bent-over Rows • 4 sets × 8 reps (75 kg)",
+            "Close-Grip Lat Pulldowns • 3 sets × 10 reps (65 kg)",
+            "Incline Dumbbell Bicep Curls • 4 sets × 10 reps (16 kg)",
+            "Face Pulls with External Rotation • 4 sets × 15 reps (20 kg)",
+          ],
+        };
+      } else if (index == 3) {
+        // Thursday - Leg Day
+        return {
+          "day": dayLabel,
+          "date": "${dayDate.day}",
+          "hasWorkout": true,
+          "workoutType": AppTexts.legWorkout,
+          "workoutColor": const Color(0xFF4855DF),
+          "icon": AppImages.legIcon,
+          "title": AppTexts.legDayBlitz,
+          "duration": "50m - 55m",
+          "exercises": [
+            "Barbell Back Squats (A-T-G) • 4 sets × 6 reps (120 kg)",
+            "Romanian Deadlifts (RDL) • 4 sets × 8 reps (100 kg)",
+            "Bulgarian Split Squats • 3 sets × 10 reps/leg (24 kg)",
+            "Seated Hamstring Curls • 4 sets × 12 reps (55 kg)",
+            "Standing Calf Raises • 4 sets × 15 reps (70 kg)",
+          ],
+        };
+      } else if (index == 5) {
+        // Saturday - HIIT & Conditioning
+        return {
+          "day": dayLabel,
+          "date": "${dayDate.day}",
+          "hasWorkout": true,
+          "workoutType": "HIIT Conditioning",
+          "workoutColor": const Color(0xFFF99955),
+          "icon": AppImages.exerciseIcon,
+          "title": "Athletic Engine Burn",
+          "duration": "25m - 30m",
+          "exercises": [
+            "Kettlebell Swings • 5 sets × 20 reps (28 kg)",
+            "Concept2 Row Sprints • 5 sets × 250m (<45s pace)",
+            "Dumbbell Devil Presses • 4 sets × 10 reps (16 kg)",
+            "Box Jumps (24 inch) • 4 sets × 12 reps",
+            "Ab Wheel Rollouts • 4 sets × 12 reps",
+          ],
+        };
+      } else {
+        // Rest / Active Recovery Day
+        return {
+          "day": dayLabel,
+          "date": "${dayDate.day}",
+          "hasWorkout": false,
+        };
+      }
+    });
   }
 
   void moveWorkout(int fromIndex, int toIndex) {
@@ -97,10 +173,14 @@ class _PlanScreenState extends State<PlanScreen> {
         ),
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: Color(0xFF00C896), size: 18),
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Color(0xFF00C896),
+              size: 18,
+            ),
             const SizedBox(width: 10),
             Text(
-              "Moved to ${weekDays[toIndex]['day']}, Dec ${weekDays[toIndex]['date']}",
+              "Moved to ${weekDays[toIndex]['day']}, ${CalendarUtils.monthName(currentMonday.month)} ${weekDays[toIndex]['date']}",
               style: GoogleFonts.mulish(color: Colors.white, fontSize: 13),
             ),
           ],
@@ -154,7 +234,10 @@ class _PlanScreenState extends State<PlanScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: accentColor.withValues(alpha: 0.18),
                       borderRadius: BorderRadius.circular(8),
@@ -174,7 +257,11 @@ class _PlanScreenState extends State<PlanScreen> {
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.timer_outlined, size: 16, color: Colors.white70),
+                      const Icon(
+                        Icons.timer_outlined,
+                        size: 16,
+                        color: Colors.white70,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         day["duration"] ?? "25m",
@@ -201,7 +288,7 @@ class _PlanScreenState extends State<PlanScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                "Scheduled for ${day['day']}, December ${day['date']}",
+                "Scheduled for ${day['day']}, ${CalendarUtils.monthName(currentMonday.month)} ${day['date']}",
                 style: GoogleFonts.mulish(
                   color: Colors.white.withValues(alpha: 0.6),
                   fontSize: 13,
@@ -223,13 +310,17 @@ class _PlanScreenState extends State<PlanScreen> {
                 (ex) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: accentColor,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: accentColor,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -237,8 +328,9 @@ class _PlanScreenState extends State<PlanScreen> {
                         child: Text(
                           ex,
                           style: GoogleFonts.mulish(
-                            color: Colors.white.withValues(alpha: 0.85),
-                            fontSize: 14,
+                            color: Colors.white.withValues(alpha: 0.88),
+                            fontSize: 13.5,
+                            height: 1.35,
                           ),
                         ),
                       ),
@@ -304,6 +396,7 @@ class _PlanScreenState extends State<PlanScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.black,
         elevation: 0,
+        centerTitle: false,
         title: Text(
           AppTexts.trainingCalendar,
           style: GoogleFonts.mulish(
@@ -312,67 +405,12 @@ class _PlanScreenState extends State<PlanScreen> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: TextButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: const Color(0xFF1E1E28),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      side: const BorderSide(color: Color(0xFF00C896), width: 1),
-                    ),
-                    content: Row(
-                      children: [
-                        const Icon(
-                          Icons.check_circle_rounded,
-                          color: Color(0xFF00C896),
-                          size: 18,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          AppTexts.planSaved,
-                          style: GoogleFonts.mulish(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: AppColors.primaryBlue.withValues(alpha: 0.18),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(
-                    color: AppColors.primaryBlue.withValues(alpha: 0.4),
-                    width: 1,
-                  ),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              ),
-              child: Text(
-                AppTexts.save,
-                style: GoogleFonts.mulish(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Column(
         children: [
-          const WeekInfoSection(
-            weekText: AppTexts.weekTwoOfEight,
-            dateRange: AppTexts.weekTwoDateRange,
+          WeekInfoSection(
+            weekText: "Week $currentWeekNumber/$totalWeeksInMonth",
+            dateRange: currentWeekRange,
             totalTime: AppTexts.total60Min,
           ),
           Expanded(
@@ -392,15 +430,16 @@ class _PlanScreenState extends State<PlanScreen> {
               },
               itemBuilder: (context, index) {
                 if (index == weekDays.length) {
-                  return const Column(
+                  final nextWeekNum = currentWeekNumber + 1;
+                  return Column(
                     children: [
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       WeekInfoSection(
-                        weekText: AppTexts.weekThreeOfEight,
-                        dateRange: AppTexts.weekThreeDateRange,
+                        weekText: "Week $nextWeekNum/$totalWeeksInMonth",
+                        dateRange: nextWeekRange,
                         totalTime: AppTexts.total70Min,
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                     ],
                   );
                 }
@@ -488,12 +527,15 @@ class _PlanScreenState extends State<PlanScreen> {
                                       opacity: 0.92,
                                       child: SizedBox(
                                         width:
-                                            MediaQuery.of(context).size.width - 80,
+                                            MediaQuery.of(context).size.width -
+                                            80,
                                         child: WorkoutContainer(
                                           type: day["workoutType"] ?? "Workout",
-                                          color: day["workoutColor"] ??
+                                          color:
+                                              day["workoutColor"] ??
                                               AppColors.primaryBlue,
-                                          iconPath: day["icon"] ??
+                                          iconPath:
+                                              day["icon"] ??
                                               AppImages.exerciseIcon,
                                           title: day["title"] ?? "Workout",
                                           duration: day["duration"] ?? "20m",
@@ -505,20 +547,22 @@ class _PlanScreenState extends State<PlanScreen> {
                                     opacity: 0.25,
                                     child: WorkoutContainer(
                                       type: day["workoutType"] ?? "Workout",
-                                      color: day["workoutColor"] ??
+                                      color:
+                                          day["workoutColor"] ??
                                           AppColors.primaryBlue,
-                                      iconPath: day["icon"] ??
-                                          AppImages.exerciseIcon,
+                                      iconPath:
+                                          day["icon"] ?? AppImages.exerciseIcon,
                                       title: day["title"] ?? "Workout",
                                       duration: day["duration"] ?? "20m",
                                     ),
                                   ),
                                   child: WorkoutContainer(
                                     type: day["workoutType"] ?? "Workout",
-                                    color: day["workoutColor"] ??
+                                    color:
+                                        day["workoutColor"] ??
                                         AppColors.primaryBlue,
-                                    iconPath: day["icon"] ??
-                                        AppImages.exerciseIcon,
+                                    iconPath:
+                                        day["icon"] ?? AppImages.exerciseIcon,
                                     title: day["title"] ?? "Workout",
                                     duration: day["duration"] ?? "20m",
                                     onTap: () => _showWorkoutDetails(day),
@@ -536,7 +580,9 @@ class _PlanScreenState extends State<PlanScreen> {
                                     color: Colors.white.withValues(alpha: 0.02),
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.04),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.04,
+                                      ),
                                     ),
                                   ),
                                   child: Row(
@@ -544,7 +590,9 @@ class _PlanScreenState extends State<PlanScreen> {
                                       Icon(
                                         Icons.bedtime_outlined,
                                         size: 16,
-                                        color: Colors.white.withValues(alpha: 0.25),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.25,
+                                        ),
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(

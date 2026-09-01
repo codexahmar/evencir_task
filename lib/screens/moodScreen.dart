@@ -93,24 +93,24 @@ class _MoodscreenState extends State<Moodscreen> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double dialSize = (screenWidth * 0.72).clamp(240.0, 320.0);
+    final double dialSize = (screenWidth * 0.74).clamp(250.0, 320.0);
     final double ringThickness = dialSize * 0.085;
     final double radius = dialSize / 2 - ringThickness / 2 - 4;
 
     return Scaffold(
       backgroundColor: AppColors.black,
       body: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 350),
         decoration: BoxDecoration(
           gradient: RadialGradient(
-            center: const Alignment(0, -0.35),
-            radius: 0.9,
+            center: const Alignment(0, -0.28),
+            radius: 0.95,
             colors: [
-              currentColor.withValues(alpha: 0.22),
-              const Color(0xFF0C0C10),
+              currentColor.withValues(alpha: 0.12),
+              const Color(0xFF0D0D12),
               AppColors.black,
             ],
-            stops: const [0.0, 0.55, 1.0],
+            stops: const [0.0, 0.45, 1.0],
           ),
         ),
         child: SafeArea(
@@ -165,7 +165,7 @@ class _MoodscreenState extends State<Moodscreen> {
 
                         const SizedBox(height: 24),
 
-                        // Interactive Radial Mood Dial
+                        // Clean Minimal Radial Mood Dial
                         Center(
                           child: GestureDetector(
                             onPanUpdate: (details) {
@@ -182,26 +182,7 @@ class _MoodscreenState extends State<Moodscreen> {
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
-                                // Glow Behind Ring
-                                AnimatedContainer(
-                                  duration: const Duration(milliseconds: 300),
-                                  width: dialSize * 0.85,
-                                  height: dialSize * 0.85,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: currentColor.withValues(
-                                          alpha: 0.25,
-                                        ),
-                                        blurRadius: 35,
-                                        spreadRadius: 8,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                // Custom Sweep Ring
+                                // Custom Sweep Gradient Ring
                                 CustomPaint(
                                   size: Size(dialSize, dialSize),
                                   painter: MoodRingPainter(
@@ -210,23 +191,52 @@ class _MoodscreenState extends State<Moodscreen> {
                                   ),
                                 ),
 
-                                // Center Emoji Icon
-                                AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 250),
-                                  transitionBuilder: (child, anim) =>
-                                      ScaleTransition(
-                                        scale: anim,
-                                        child: child,
+                                // Center Emoji Disc with Glassmorphism
+                                Container(
+                                  width: dialSize * 0.44,
+                                  height: dialSize * 0.44,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: const Color(0xFF0F0F16).withValues(
+                                      alpha: 0.9,
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.1,
                                       ),
-                                  child: Image.asset(
-                                    currentEmoji,
-                                    key: ValueKey<String>(currentEmoji),
-                                    width: dialSize * 0.36,
-                                    height: dialSize * 0.36,
+                                      width: 1,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.4,
+                                        ),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 250,
+                                      ),
+                                      transitionBuilder: (child, anim) =>
+                                          ScaleTransition(
+                                            scale: anim,
+                                            child: child,
+                                          ),
+                                      child: Image.asset(
+                                        currentEmoji,
+                                        key: ValueKey<String>(currentEmoji),
+                                        width: dialSize * 0.32,
+                                        height: dialSize * 0.32,
+                                      ),
+                                    ),
                                   ),
                                 ),
 
-                                // Draggable Glowing Indicator Knob
+                                // Draggable Indicator Knob
                                 Transform.translate(
                                   offset: Offset(
                                     radius * cos(angle),
@@ -244,11 +254,11 @@ class _MoodscreenState extends State<Moodscreen> {
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.7,
+                                          color: currentColor.withValues(
+                                            alpha: 0.4,
                                           ),
-                                          blurRadius: 10,
-                                          spreadRadius: 2,
+                                          blurRadius: 8,
+                                          spreadRadius: 1,
                                         ),
                                       ],
                                     ),
@@ -259,7 +269,7 @@ class _MoodscreenState extends State<Moodscreen> {
                           ),
                         ),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 22),
 
                         // Active Mood Label & Descriptor Quote
                         Center(

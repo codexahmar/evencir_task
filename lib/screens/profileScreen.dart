@@ -1,5 +1,5 @@
 import 'package:evencir_task/constants/app_colors.dart';
-import 'package:evencir_task/constants/app_texts.dart';
+import 'package:evencir_task/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,42 +22,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.black,
         elevation: 0,
+        centerTitle: false,
         title: Text(
-          AppTexts.profile,
+          "Profile",
           style: GoogleFonts.mulish(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: const Color(0xFF1E1E28),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  content: Text(
-                    "Profile preferences saved.",
-                    style: GoogleFonts.mulish(color: Colors.white, fontSize: 13),
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(Icons.settings_outlined, color: Colors.white),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // User Avatar Card with Pro Athlete Badge
+            // User Profile Card
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -77,42 +58,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: Row(
                 children: [
-                  // Avatar with Gradient Ring
+                  // Real Profile Image
                   Container(
-                    width: 64,
-                    height: 64,
-                    decoration: const BoxDecoration(
+                    width: 68,
+                    height: 68,
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF4855DF), Color(0xFF00C896)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                      border: Border.all(
+                        color: const Color(0xFF00C896),
+                        width: 2,
                       ),
-                    ),
-                    padding: const EdgeInsets.all(2.5),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF18181C),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.person_rounded,
-                          size: 34,
-                          color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF00C896).withValues(alpha: 0.25),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
                         ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(34),
+                      child: Image.asset(
+                        AppImages.profileImage,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: const Color(0xFF22222A),
+                            child: const Icon(
+                              Icons.person_rounded,
+                              size: 36,
+                              color: Colors.white70,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
-                  const SizedBox(width: 14),
+                  const SizedBox(width: 16),
 
-                  // Name & Level
+                  // Username, Email & Status
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppTexts.userName,
+                          "codexahmar",
                           style: GoogleFonts.manrope(
                             color: Colors.white,
                             fontSize: 18,
@@ -121,34 +111,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          AppTexts.userHandle,
+                          "codexahmar@gmail.com",
                           style: GoogleFonts.mulish(
-                            color: Colors.white.withValues(alpha: 0.5),
+                            color: Colors.white.withValues(alpha: 0.55),
                             fontSize: 12,
+                            fontWeight: FontWeight.w400,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF00C896).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: const Color(0xFF00C896).withValues(alpha: 0.3),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF00C896).withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: const Color(0xFF00C896).withValues(alpha: 0.35),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 6,
+                                    height: 6,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFF00C896),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "PRO ATHLETE",
+                                    style: GoogleFonts.mulish(
+                                      color: const Color(0xFF00C896),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            AppTexts.athleteLevel,
-                            style: GoogleFonts.mulish(
-                              color: const Color(0xFF00C896),
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
@@ -159,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 16),
 
-            // 3-Stat Metric Bar
+            // 3-Metric Summary Ribbon
             Container(
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
               decoration: BoxDecoration(
@@ -182,9 +193,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 22),
 
-            // Active Goals & Targets
+            // Health & Body Stats Grid
             Text(
-              "Active Targets",
+              "Body & Performance",
+              style: GoogleFonts.mulish(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            Row(
+              children: [
+                Expanded(
+                  child: _buildMetricTile(
+                    title: "Current Weight",
+                    value: "75.0 kg",
+                    subValue: "Goal: 72.0 kg",
+                    icon: Icons.monitor_weight_outlined,
+                    iconColor: const Color(0xFF00C896),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildMetricTile(
+                    title: "Resting HR",
+                    value: "62 bpm",
+                    subValue: "Optimal range",
+                    icon: Icons.favorite_outline_rounded,
+                    iconColor: const Color(0xFFF28DB3),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildMetricTile(
+                    title: "Body Mass (BMI)",
+                    value: "23.7",
+                    subValue: "Healthy weight",
+                    icon: Icons.speed_rounded,
+                    iconColor: const Color(0xFF48A4E5),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildMetricTile(
+                    title: "Weekly Time",
+                    value: "5h 40m",
+                    subValue: "+45m vs last week",
+                    icon: Icons.timer_outlined,
+                    iconColor: const Color(0xFFF99955),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 22),
+
+            // Active Goals Progression
+            Text(
+              "Weekly Targets",
               style: GoogleFonts.mulish(
                 color: Colors.white,
                 fontSize: 16,
@@ -196,7 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildGoalTile(
               icon: Icons.fitness_center_rounded,
               iconColor: const Color(0xFF4855DF),
-              title: "Weekly Workouts",
+              title: "Workout Sessions",
               subtitle: "4 of 5 sessions completed",
               progress: 0.8,
             ),
@@ -205,23 +277,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               icon: Icons.water_drop_rounded,
               iconColor: const Color(0xFF00D2FF),
               title: "Daily Hydration",
-              subtitle: "1,250 ml of 2,500 ml target",
-              progress: 0.5,
-            ),
-            const SizedBox(height: 10),
-            _buildGoalTile(
-              icon: Icons.monitor_weight_outlined,
-              iconColor: const Color(0xFF20B76F),
-              title: "Target Weight",
-              subtitle: "75.0 kg -> Goal: 72.0 kg (-3.0 kg)",
-              progress: 0.65,
+              subtitle: "1,250 ml of 2,000 ml target",
+              progress: 0.62,
             ),
 
             const SizedBox(height: 22),
 
-            // Settings & Preferences
+            // Device & App Preferences
             Text(
-              "Preferences & Sync",
+              "Sync & Preferences",
               style: GoogleFonts.mulish(
                 color: Colors.white,
                 fontSize: 16,
@@ -254,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   _buildSwitchTile(
                     icon: Icons.vibration_rounded,
-                    title: "Haptic Feedback & Sound",
+                    title: "Haptic Feedback & Cues",
                     value: _hapticsEnabled,
                     onChanged: (val) => setState(() => _hapticsEnabled = val),
                   ),
@@ -266,7 +330,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   _buildSwitchTile(
                     icon: Icons.notifications_none_rounded,
-                    title: "Workout Reminders",
+                    title: "Training Reminders",
                     value: _remindersEnabled,
                     onChanged: (val) => setState(() => _remindersEnabled = val),
                   ),
@@ -276,10 +340,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 24),
 
-            // Version info
+            // Clean Version info
             Center(
               child: Text(
-                "EVENCIR Fitness v1.0.0 • Build 2026.09",
+                "EVENCIR Fitness v1.0.0",
                 style: GoogleFonts.mulish(
                   color: Colors.white.withValues(alpha: 0.3),
                   fontSize: 11,
@@ -326,6 +390,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: 1,
       height: 28,
       color: Colors.white.withValues(alpha: 0.08),
+    );
+  }
+
+  Widget _buildMetricTile({
+    required String title,
+    required String value,
+    required String subValue,
+    required IconData icon,
+    required Color iconColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.07),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.mulish(
+                    color: Colors.white.withValues(alpha: 0.5),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(icon, color: iconColor, size: 16),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: GoogleFonts.manrope(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.3,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            subValue,
+            style: GoogleFonts.mulish(
+              color: iconColor,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
