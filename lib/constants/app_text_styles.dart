@@ -9,15 +9,62 @@ class AppTextStyles {
     FontWeight fontWeight = FontWeight.normal,
     String fontFamily = 'Mulish',
     double? letterSpacing,
+    double? height,
   }) {
-    double baseSize = MediaQuery.of(context).size.width * 0.045;
+    double baseSize = 16.0;
 
-    return TextStyle(
+    return GoogleFonts.getFont(
+      fontFamily,
       color: color,
       fontSize: fontSize ?? baseSize,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
-      fontFamily: GoogleFonts.getFont(fontFamily).fontFamily,
+      height: height,
     );
   }
+
+  // Pre-baked text styles for consistent typography
+  static TextStyle heading1({Color color = Colors.white}) =>
+      GoogleFonts.mulish(
+        color: color,
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+      );
+
+  static TextStyle heading2({Color color = Colors.white}) =>
+      GoogleFonts.mulish(
+        color: color,
+        fontSize: 22,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.3,
+      );
+
+  static TextStyle heading3({Color color = Colors.white}) =>
+      GoogleFonts.mulish(
+        color: color,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      );
+
+  static TextStyle bodyMedium({Color color = Colors.white}) =>
+      GoogleFonts.mulish(
+        color: color,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle bodySmall({Color color = Colors.white70}) =>
+      GoogleFonts.mulish(
+        color: color,
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle caption({Color color = Colors.white60}) =>
+      GoogleFonts.mulish(
+        color: color,
+        fontSize: 11,
+        fontWeight: FontWeight.w500,
+      );
 }

@@ -1,16 +1,30 @@
 class AppTexts {
+  // Splash & Brand
+  static const String appName = "EVENCIR";
+  static const String appTagline = "Train • Track • Transform";
+  static const String appSubtitle = "Your ultimate fitness companion";
+
+  // Mood
   static const String moodTitle = "Mood";
   static const String startYourDay = "Start your day";
   static const String howAreYouFeeling = "How are you feeling at the Moment?";
-  static const String continueButton = "Continue";
+  static const String continueButton = "Log Mood";
+  static const String moodSaved = "Mood recorded successfully!";
+
+  // Dashboard / Nutrition
   static const String today = "Today";
   static const String workout = "Workouts";
   static const String date = "December 22 - 25m - 30m";
   static const String upperBody = "Upper Body";
   static const String insights = "My Insights";
+  static const String greetingMorning = "Good morning";
+  static const String greetingAfternoon = "Good afternoon";
+  static const String greetingEvening = "Good evening";
 
+  // Plan / Training
   static const String trainingCalendar = "Training Calendar";
   static const String save = "Save";
+  static const String planSaved = "Workout schedule updated!";
 
   static const String weekTwoOfEight = "Week 2/8";
   static const String weekThreeOfEight = "Week 3/8";
@@ -31,5 +45,13 @@ class AppTexts {
   static const String armBlaster = "Arm Blaster";
   static const String legWorkout = "Leg Workout";
   static const String legDayBlitz = "Leg Day Blitz";
+  static const String coreWorkout = "Core & Cardio";
+  static const String coreBurn = "Core Shredder";
   static const String workoutDuration = "20m - 25m";
+
+  // Profile
+  static const String profile = "Profile";
+  static const String userName = "Alex Rivers";
+  static const String userHandle = "@alexrivers";
+  static const String athleteLevel = "PRO ATHLETE • Level 14";
 }
