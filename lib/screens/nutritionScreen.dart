@@ -75,7 +75,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${_getGreeting()}, Alex",
+                          "${_getGreeting()}, Codex Ahmar",
                           style: GoogleFonts.mulish(
                             color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 14,

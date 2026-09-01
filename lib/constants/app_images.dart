@@ -1,5 +1,6 @@
 class AppImages {
   // Icons
+  static const String appLogo = "assets/icons/app_logo.png";
   static const String arrowIcon = "assets/icons/arrow_icon.png";
   static const String bellIcon = "assets/icons/bell.png";
   static const String diceIcon = "assets/icons/dice_icon.png";

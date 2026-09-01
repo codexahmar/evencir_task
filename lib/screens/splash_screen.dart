@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:evencir_task/constants/app_images.dart';
 import 'package:evencir_task/constants/app_texts.dart';
 import 'package:evencir_task/screens/homeScreen.dart';
 import 'package:flutter/material.dart';
@@ -105,11 +106,11 @@ class _SplashScreenState extends State<SplashScreen>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Emblem Container
+                          // App Logo Container
                           Stack(
                             alignment: Alignment.center,
                             children: [
-                              // Pulsing Glow Aura (around icon only)
+                              // Pulsing Glow Aura
                               Container(
                                 width: 110,
                                 height: 110,
@@ -117,66 +118,31 @@ class _SplashScreenState extends State<SplashScreen>
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF4855DF).withValues(
+                                      color: const Color(0xFF00C896).withValues(
                                         alpha: 0.35 * _glowAnimation.value,
                                       ),
-                                      blurRadius: 40,
-                                      spreadRadius: 15,
+                                      blurRadius: 35,
+                                      spreadRadius: 10,
                                     ),
                                     BoxShadow(
-                                      color: const Color(0xFF00C896).withValues(
+                                      color: const Color(0xFF4855DF).withValues(
                                         alpha: 0.25 * _glowAnimation.value,
                                       ),
-                                      blurRadius: 25,
-                                      spreadRadius: 8,
+                                      blurRadius: 45,
+                                      spreadRadius: 12,
                                     ),
                                   ],
                                 ),
                               ),
 
-                              // Emblem Outer Ring
-                              Container(
-                                width: 92,
-                                height: 92,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFF4855DF),
-                                      Color(0xFF00C896),
-                                      Color(0xFF00D2FF),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.2),
-                                    width: 1.5,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.5,
-                                      ),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 6),
-                                    ),
-                                  ],
-                                ),
-                                child: Center(
-                                  child: Container(
-                                    width: 76,
-                                    height: 76,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xFF0F0F14),
-                                    ),
-                                    child: const Icon(
-                                      Icons.bolt_rounded,
-                                      size: 44,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                              // Real App Logo from assets/icons/app_logo.png
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(24),
+                                child: Image.asset(
+                                  AppImages.appLogo,
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ],
@@ -213,14 +179,16 @@ class _SplashScreenState extends State<SplashScreen>
                           // Tagline with pill badge
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
+                              horizontal: 16,
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.06),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.12),
+                                color: const Color(
+                                  0xFF00C896,
+                                ).withValues(alpha: 0.35),
                                 width: 1,
                               ),
                             ),
@@ -228,8 +196,8 @@ class _SplashScreenState extends State<SplashScreen>
                               AppTexts.appTagline.toUpperCase(),
                               style: GoogleFonts.mulish(
                                 fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 3.0,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 2.5,
                                 color: const Color(0xFF00C896),
                               ),
                             ),
@@ -274,12 +242,12 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          "v1.0 • Ready for training",
+                          "AURAFIT • v1.0.0",
                           style: GoogleFonts.mulish(
-                            color: Colors.white.withValues(alpha: 0.35),
+                            color: Colors.white.withValues(alpha: 0.4),
                             fontSize: 11,
-                            fontWeight: FontWeight.w400,
-                            letterSpacing: 1.0,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
                           ),
                         ),
                       ],

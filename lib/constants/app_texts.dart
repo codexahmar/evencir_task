@@ -1,8 +1,8 @@
 class AppTexts {
   // Splash & Brand
-  static const String appName = "EVENCIR";
+  static const String appName = "AURAFIT";
   static const String appTagline = "Train • Track • Transform";
-  static const String appSubtitle = "Your ultimate fitness companion";
+  static const String appSubtitle = "Your ultimate fitness & wellness companion";
 
   // Mood
   static const String moodTitle = "Mood";
@@ -51,7 +51,8 @@ class AppTexts {
 
   // Profile
   static const String profile = "Profile";
-  static const String userName = "Alex Rivers";
-  static const String userHandle = "@alexrivers";
+  static const String userName = "Codex Ahmar";
+  static const String userHandle = "@codexahmar";
+  static const String userEmail = "codexahmar@gmail.com";
   static const String athleteLevel = "PRO ATHLETE • Level 14";
 }

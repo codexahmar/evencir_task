@@ -343,7 +343,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Clean Version info
             Center(
               child: Text(
-                "EVENCIR Fitness v1.0.0",
+                "AURAFIT Pro v1.0.0",
                 style: GoogleFonts.mulish(
                   color: Colors.white.withValues(alpha: 0.3),
                   fontSize: 11,
