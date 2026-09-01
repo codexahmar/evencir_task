@@ -1,96 +1,94 @@
-## EvenCir — Flutter Interview Test
+# ⚡ AuraFit — Smart Fitness & Wellness Tracker
 
-This repository contains the EvenCir Flutter app used for the interview test submission.
+A modern, responsive, and aesthetic Flutter application designed for structured workout planning, dynamic hydration & calorie tracking, and mindful mood logging.
 
-Below are the required details for a GitHub submission: dependencies used (with reasons), a short project structure explanation, direct links to screenshots, a demo video and the APK for easy testing.
-
----
-
-## 1) Dependencies used & why
-
-The dependencies listed below are taken from the project's `pubspec.yaml` (versions present at the time of submission).
-
-- `flutter` (SDK): The Flutter framework.
-- `cupertino_icons` (^1.0.8): Platform-styled icons used by some widgets and for iOS look-and-feel where needed.
-- `google_fonts` (^6.3.2): Provides easy access to Google Fonts for consistent typography across the app.
-- `table_calendar` (^3.0.9): Used to render the calendar UI and provide calendar utilities such as date selection and visible days.
-
-Why these were needed (short):
-- `google_fonts` — chosen to quickly and cleanly apply a modern font family across the app without bundling font files manually.
-- `table_calendar` — provides a feature-rich calendar widget out of the box (multi-day visible range, selection, styling) so the app can focus on UI/UX rather than re-implementing calendar mechanics.
-
-If you expect other packages to be listed here (for example network or state management libs), they are not used in this submission. The project keeps state and local UI logic simple.
+> [!IMPORTANT]
+> **Notice on UI Updates:**
+> The linked Google Drive APK, screen recording, and repository screenshots reflect the initial baseline submission. To experience the latest enhanced UI (including the animated splash screen, interactive FL Chart fluid wave, dynamic calendar routines, Pro Profile, and responsive zero-overflow layouts), please **clone the repository and run it locally** using `flutter run`.
 
 ---
 
-## 2) Project structure
+## 📱 App Screenshots
 
-Top-level folders and purpose (brief):
+<div align="center">
 
-- `lib/` — Main application Dart code.
-	- `constants/` — App-wide constants such as colors, images, text styles and static strings (`app_colors.dart`, `app_images.dart`, `app_text_styles.dart`, `app_texts.dart`).
-	- `screens/` — Each screen for the app: `homeScreen.dart`, `moodScreen.dart`, `nutritionScreen.dart`, `planScreen.dart`, `profileScreen.dart`.
-	- `utils/` — Reusable utilities (e.g., `calendar_utils.dart`).
-	- `widgets/` — Reusable UI components and custom widgets (app bar, cards, mini calendar, mood ring painter, etc.).
+| 🏠 Home & Nutrition | 📋 Training Plan |
+| :---: | :---: |
+| <img src="./screenshots/homeScreen.png" width="280" alt="Home Screen" /> | <img src="./screenshots/planScreen.png" width="280" alt="Plan Screen" /> |
 
-- `assets/` — Images and icons used by the app (declared in `pubspec.yaml`).
-- `screenshots/` — App screenshots for the README and review.
-- `recording/` — App demo video (screen recording).
+| 😊 Mood Dial | 📅 Calendar View |
+| :---: | :---: |
+| <img src="./screenshots/moodScreen.png" width="280" alt="Mood Screen" /> | <img src="./screenshots/calendar.png" width="280" alt="Calendar Screen" /> |
 
-
-Note: Per the instructions, no changes were made to anything under `lib/` while preparing this README update.
+</div>
 
 ---
 
-## 🖼️ 3) App Screenshots
+## 🛠️ Dependencies & Rationale
 
+Dependencies from `pubspec.yaml`:
 
-Below are direct previews of the app screens (all screenshots are shown at a smaller size for readability):
-
-### 🏠 Home Screen
-<img src="./screenshots/homeScreen.png" alt="Home Screen" width="300" height="600" />
-
-### 📅 Calendar Screen
-<img src="./screenshots/calendar.png" alt="Calendar Screen" width="300" height="600" />
-
-### 😊 Mood Screen
-<img src="./screenshots/moodScreen.png" alt="Mood Screen" width="300" height="600" />
-
-### 📋 Plan Screen
-<img src="./screenshots/planScreen.png" alt="Plan Screen" width="300" height="600" />
+- **`flutter` (SDK)**: Core framework for cross-platform UI rendering.
+- **`fl_chart` (^1.1.1)**: Powers the smooth, interactive hydration timeline wave chart with dynamic touch tooltips and animated curve transitions.
+- **`google_fonts` (^6.3.2)**: Integrates modern typography (Manrope & Mulish) for clean hierarchy.
+- **`table_calendar` (^3.0.9)**: Custom month & week calendar selector modal with active date highlighting.
+- **`cupertino_icons` (^1.0.8)**: iOS-style iconography.
 
 ---
 
-## 🎥 4) App Demo Video
+## 🏗️ Project Architecture
 
+```
+lib/
+├── constants/       # App tokens (AppColors, AppImages, AppTexts, AppTextStyles)
+├── screens/         # Feature screens
+│   ├── splash_screen.dart     # Animated glowing brand splash
+│   ├── homeScreen.dart        # Indexed navigation root
+│   ├── nutritionScreen.dart   # Dashboard, hydration & calorie tracking
+│   ├── planScreen.dart        # Dynamic drag-and-drop workout schedule
+│   ├── moodScreen.dart        # Minimal 360° interactive mood dial
+│   └── profileScreen.dart     # Pro Athlete metrics & sync settings
+├── utils/           # Helper utilities (CalendarUtils, WorkoutUtils)
+└── widgets/         # Reusable glassmorphic UI components & custom painters
+```
 
-You can **watch the screen recording directly below** ⬇️
+---
 
-[<video src="./recording/appDemo.mp4" controls autoplay loop muted playsinline width="400" height="800">
+## 🎥 App Demo Video
+
+Watch the screen recording demo:
+
+[<video src="./recording/appDemo.mp4" controls autoplay loop muted playsinline width="320">
 	Your browser does not support the video tag.
 </video>](https://github.com/user-attachments/assets/ff4c6c6a-3b4c-49ee-9733-fb44954bc421)
 
-*(If the above video doesn’t autoplay, click it to open directly in GitHub or download it.)*
+*(Click video above to preview or download directly from GitHub).*
 
 ---
 
-## 📱 5) App APK
+## 📦 APK Download
 
-You can test the app by downloading the APK from Google Drive:
+Test the baseline APK via Google Drive:
 
 👉 [**Download APK (Google Drive)**](https://drive.google.com/file/d/1N1DGwk9FaUM7rpdr-DKUzCn5CyRksxG_/view?usp=drive_link)
 
 ---
 
-## ⚙️ 6) How to run
+## 🚀 How to Run Locally
 
-Make sure Flutter SDK and Android SDK are properly installed.
-
-Run the following commands from the project root:
+Ensure the Flutter SDK is installed and configured on your machine:
 
 ```bash
-flutter pub get
-flutter run        # Run the app on emulator or connected device
-flutter build apk  # Build release APK
+# 1. Clone the repository
+git clone https://github.com/codexahmar/AuraFit.git
 
+# 2. Navigate to project directory
+cd AuraFit
+
+# 3. Install dependencies
+flutter pub get
+
+# 4. Run on connected device or simulator
+flutter run
+```
 
