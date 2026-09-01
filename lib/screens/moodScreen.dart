@@ -1,9 +1,10 @@
 import 'dart:math';
+import 'package:evencir_task/constants/app_colors.dart';
 import 'package:evencir_task/constants/app_images.dart';
+import 'package:evencir_task/constants/app_texts.dart';
 import 'package:evencir_task/widgets/moodRingPainter_widget.dart';
 import 'package:flutter/material.dart';
-import '../../../constants/app_texts.dart';
-import '../../../constants/app_text_styles.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Moodscreen extends StatefulWidget {
   const Moodscreen({super.key});
@@ -16,10 +17,10 @@ class _MoodscreenState extends State<Moodscreen> {
   double angle = 0;
 
   final List<Color> colors = const [
-    Color(0xFF6EB9AD),
-    Color(0xFFC9BBEF),
-    Color(0xFFF28DB3),
-    Color(0xFFF99955),
+    Color(0xFF6EB9AD), // Calm
+    Color(0xFFC9BBEF), // Content
+    Color(0xFFF28DB3), // Peaceful
+    Color(0xFFF99955), // Happy
   ];
 
   final List<String> emojis = [
@@ -31,173 +32,318 @@ class _MoodscreenState extends State<Moodscreen> {
 
   final List<String> moods = ["Calm", "Content", "Peaceful", "Happy"];
 
+  final List<String> moodQuotes = [
+    "Centered, focused & mindful",
+    "Satisfied, peaceful & grateful",
+    "Tranquil, balanced & serene",
+    "Energized, joyful & radiant",
+  ];
+
   String currentMood = "Calm";
   String currentEmoji = AppImages.calmImage;
+  String currentQuote = "Centered, focused & mindful";
+  Color currentColor = const Color(0xFF6EB9AD);
 
-  void updateMood(double angle) {
-    if (angle < 0) angle += 2 * pi;
+  void updateMood(double rawAngle) {
+    double a = rawAngle;
+    if (a < 0) a += 2 * pi;
     const double sectionAngle = 2 * pi / 4;
-    final adjustedAngle = (angle + sectionAngle / 2) % (2 * pi);
+    final adjustedAngle = (a + sectionAngle / 2) % (2 * pi);
     final int section = (adjustedAngle / sectionAngle).floor() % 4;
 
     setState(() {
+      angle = rawAngle;
       currentEmoji = emojis[section];
       currentMood = moods[section];
+      currentQuote = moodQuotes[section];
+      currentColor = colors[section];
     });
+  }
+
+  void _logMood() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: const Color(0xFF1E1E28),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: currentColor, width: 1.5),
+        ),
+        content: Row(
+          children: [
+            Image.asset(currentEmoji, width: 24, height: 24),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                "Logged '$currentMood' mood! $currentQuote ✨",
+                style: GoogleFonts.mulish(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double size = screenWidth * 0.75;
-    final double ringThickness = size * 0.1;
-    final double radius = size / 2 - ringThickness / 2;
+    final double dialSize = (screenWidth * 0.72).clamp(240.0, 320.0);
+    final double ringThickness = dialSize * 0.085;
+    final double radius = dialSize / 2 - ringThickness / 2 - 4;
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
+      backgroundColor: AppColors.black,
+      body: AnimatedContainer(
+        duration: const Duration(milliseconds: 400),
+        decoration: BoxDecoration(
           gradient: RadialGradient(
-            center: Alignment.topCenter,
-            radius: 0.53,
-            colors: [Color.fromARGB(131, 33, 149, 243), Colors.black],
-            stops: [0.0, 1.0],
+            center: const Alignment(0, -0.35),
+            radius: 0.9,
+            colors: [
+              currentColor.withValues(alpha: 0.22),
+              const Color(0xFF0C0C10),
+              AppColors.black,
+            ],
+            stops: const [0.0, 0.55, 1.0],
           ),
         ),
         child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(screenWidth * 0.05),
-            child: Column(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppTexts.moodTitle,
-                        style: AppTextStyles.custom(
-                          context: context,
-                          color: Colors.white,
-                          fontSize: screenWidth * 0.08,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Mulish',
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 14,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Header
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppTexts.moodTitle,
+                              style: GoogleFonts.manrope(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              AppTexts.startYourDay,
+                              style: GoogleFonts.mulish(
+                                color: Colors.white.withValues(alpha: 0.55),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            Text(
+                              AppTexts.howAreYouFeeling,
+                              style: GoogleFonts.mulish(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: screenWidth * 0.05),
-                      Text(
-                        AppTexts.startYourDay,
-                        style: AppTextStyles.custom(
-                          context: context,
-                          color: Colors.white,
-                          fontSize: screenWidth * 0.045,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Mulish',
-                        ),
-                      ),
-                      SizedBox(height: screenWidth * 0.05),
-                      Text(
-                        AppTexts.howAreYouFeeling,
-                        style: AppTextStyles.custom(
-                          context: context,
-                          color: Colors.white,
-                          fontSize: screenWidth * 0.06,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Mulish',
-                        ),
-                      ),
-                      SizedBox(height: screenWidth * 0.12),
 
-                      Center(
-                        child: GestureDetector(
-                          onPanUpdate: (details) {
-                            final touchPosition = Offset(
-                              details.localPosition.dx - size / 2,
-                              details.localPosition.dy - size / 2,
-                            );
-                            final newAngle = atan2(
-                              touchPosition.dy,
-                              touchPosition.dx,
-                            );
-                            setState(() {
-                              angle = newAngle;
-                              updateMood(angle);
-                            });
-                          },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              CustomPaint(
-                                size: Size(size, size),
-                                painter: MoodRingPainter(),
-                              ),
-                              Image.asset(
-                                currentEmoji,
-                                width: size * 0.33,
-                                height: size * 0.33,
-                              ),
-                              Transform.translate(
-                                offset: Offset(
-                                  radius * cos(angle),
-                                  radius * sin(angle),
-                                ),
-                                child: Container(
-                                  width: size * 0.18,
-                                  height: size * 0.18,
+                        const SizedBox(height: 24),
+
+                        // Interactive Radial Mood Dial
+                        Center(
+                          child: GestureDetector(
+                            onPanUpdate: (details) {
+                              final touchPosition = Offset(
+                                details.localPosition.dx - dialSize / 2,
+                                details.localPosition.dy - dialSize / 2,
+                              );
+                              final newAngle = atan2(
+                                touchPosition.dy,
+                                touchPosition.dx,
+                              );
+                              updateMood(newAngle);
+                            },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Glow Behind Ring
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  width: dialSize * 0.85,
+                                  height: dialSize * 0.85,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.white.withOpacity(0.6),
-                                        blurRadius: 15,
-                                        spreadRadius: 5,
+                                        color: currentColor.withValues(
+                                          alpha: 0.25,
+                                        ),
+                                        blurRadius: 35,
+                                        spreadRadius: 8,
                                       ),
                                     ],
+                                  ),
+                                ),
+
+                                // Custom Sweep Ring
+                                CustomPaint(
+                                  size: Size(dialSize, dialSize),
+                                  painter: MoodRingPainter(
+                                    activeAngle: angle,
+                                    activeColor: currentColor,
+                                  ),
+                                ),
+
+                                // Center Emoji Icon
+                                AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 250),
+                                  transitionBuilder: (child, anim) =>
+                                      ScaleTransition(
+                                        scale: anim,
+                                        child: child,
+                                      ),
+                                  child: Image.asset(
+                                    currentEmoji,
+                                    key: ValueKey<String>(currentEmoji),
+                                    width: dialSize * 0.36,
+                                    height: dialSize * 0.36,
+                                  ),
+                                ),
+
+                                // Draggable Glowing Indicator Knob
+                                Transform.translate(
+                                  offset: Offset(
+                                    radius * cos(angle),
+                                    radius * sin(angle),
+                                  ),
+                                  child: Container(
+                                    width: 26,
+                                    height: 26,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: currentColor,
+                                        width: 2.5,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.7,
+                                          ),
+                                          blurRadius: 10,
+                                          spreadRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Active Mood Label & Descriptor Quote
+                        Center(
+                          child: Column(
+                            children: [
+                              AnimatedDefaultTextStyle(
+                                duration: const Duration(milliseconds: 250),
+                                style: GoogleFonts.manrope(
+                                  color: currentColor,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.3,
+                                ),
+                                child: Text(currentMood),
+                              ),
+                              const SizedBox(height: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.05),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.08),
+                                  ),
+                                ),
+                                child: Text(
+                                  currentQuote,
+                                  style: GoogleFonts.mulish(
+                                    color: Colors.white.withValues(alpha: 0.7),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
 
-                      SizedBox(height: screenWidth * 0.07),
-                      Center(
-                        child: Text(
-                          currentMood,
-                          style: AppTextStyles.custom(
-                            context: context,
-                            color: Colors.white,
-                            fontSize: screenWidth * 0.07,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mulish',
+                        const SizedBox(height: 28),
+
+                        // Action Button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 54,
+                          child: ElevatedButton(
+                            onPressed: _logMood,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.check_circle_outline_rounded,
+                                  color: Colors.black,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  AppTexts.continueButton,
+                                  style: GoogleFonts.manrope(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: screenWidth * 0.14,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(screenWidth * 0.05),
-                  ),
-                  child: Center(
-                    child: Text(
-                      AppTexts.continueButton,
-                      style: AppTextStyles.custom(
-                        context: context,
-                        color: Colors.black,
-                        fontSize: screenWidth * 0.045,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Manrope',
-                      ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

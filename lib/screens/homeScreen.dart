@@ -1,9 +1,11 @@
+import 'package:evencir_task/constants/app_colors.dart';
 import 'package:evencir_task/constants/app_images.dart';
 import 'package:evencir_task/screens/moodScreen.dart';
 import 'package:evencir_task/screens/nutritionScreen.dart';
 import 'package:evencir_task/screens/planScreen.dart';
 import 'package:evencir_task/screens/profileScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,50 +33,118 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
-
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        selectedLabelStyle: const TextStyle(fontSize: 12, height: 1.8),
-        unselectedLabelStyle: const TextStyle(fontSize: 12, height: 1.8),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: NavIcon(AppImages.nutritionIcon, 0),
-            label: "Nutrition",
+      backgroundColor: AppColors.black,
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _screens,
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF0F0F14),
+          border: Border(
+            top: BorderSide(
+              color: Colors.white.withValues(alpha: 0.08),
+              width: 1,
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: NavIcon(AppImages.planIcon, 1),
-            label: "Plan",
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.5),
+              blurRadius: 16,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildNavItem(
+                    index: 0,
+                    iconPath: AppImages.nutritionIcon,
+                    label: "Nutrition",
+                  ),
+                ),
+                Expanded(
+                  child: _buildNavItem(
+                    index: 1,
+                    iconPath: AppImages.planIcon,
+                    label: "Plan",
+                  ),
+                ),
+                Expanded(
+                  child: _buildNavItem(
+                    index: 2,
+                    iconPath: AppImages.moodIcon,
+                    label: "Mood",
+                  ),
+                ),
+                Expanded(
+                  child: _buildNavItem(
+                    index: 3,
+                    iconPath: AppImages.profileIcon,
+                    label: "Profile",
+                  ),
+                ),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: NavIcon(AppImages.moodIcon, 2),
-            label: "Mood",
-          ),
-          BottomNavigationBarItem(
-            icon: NavIcon(AppImages.profileIcon, 3),
-            label: "Profile",
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget NavIcon(String assetPath, int index) {
+  Widget _buildNavItem({
+    required int index,
+    required String iconPath,
+    required String label,
+  }) {
     final bool isSelected = _selectedIndex == index;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
-      child: Image.asset(
-        assetPath,
-        width: 26,
-        height: 26,
-        color: isSelected ? Colors.white : Colors.grey,
+
+    return InkWell(
+      onTap: () => _onItemTapped(index),
+      borderRadius: BorderRadius.circular(14),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFF00C896).withValues(alpha: 0.14)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+          border: isSelected
+              ? Border.all(
+                  color: const Color(0xFF00C896).withValues(alpha: 0.3),
+                  width: 1,
+                )
+              : null,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              iconPath,
+              width: 22,
+              height: 22,
+              color: isSelected ? const Color(0xFF00C896) : Colors.grey.shade600,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: GoogleFonts.mulish(
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected
+                    ? const Color(0xFF00C896)
+                    : Colors.grey.shade600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

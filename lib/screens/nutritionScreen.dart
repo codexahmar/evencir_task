@@ -1,12 +1,12 @@
+import 'package:evencir_task/constants/app_colors.dart';
 import 'package:evencir_task/constants/app_images.dart';
-import 'package:evencir_task/constants/app_text_styles.dart';
 import 'package:evencir_task/constants/app_texts.dart';
 import 'package:evencir_task/utils/calendar_utils.dart';
 import 'package:evencir_task/widgets/appbar_widget.dart';
-import 'package:evencir_task/widgets/minicalendar_widget.dart';
 import 'package:evencir_task/widgets/calories_card_widget.dart';
-import 'package:evencir_task/widgets/weight_card_widget.dart';
 import 'package:evencir_task/widgets/hydration_card_widget.dart';
+import 'package:evencir_task/widgets/minicalendar_widget.dart';
+import 'package:evencir_task/widgets/weight_card_widget.dart';
 import 'package:evencir_task/widgets/workoutCard_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,161 +25,211 @@ class _NutritionScreenState extends State<NutritionScreen> {
   List<DateTime> get currentWeekDays =>
       CalendarUtils.getCurrentWeekDays(focusedDay);
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return AppTexts.greetingMorning;
+    if (hour < 17) return AppTexts.greetingAfternoon;
+    return AppTexts.greetingEvening;
+  }
+
+  String _getTimeBasedIcon() {
+    final hour = DateTime.now().hour;
+    if (hour >= 6 && hour < 18) {
+      return AppImages.sunIcon;
+    }
+    return AppImages.moon;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final safeAreaHeight =
-        screenHeight -
-        MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom;
-    String getTimeBasedIcon() {
-      final hour = DateTime.now().hour;
-
-      // Day time: 6 AM to 6 PM (6-17)
-      if (hour >= 6 && hour < 18) {
-        return AppImages.sunIcon;
-      }
-      // Night time: 6 PM to 6 AM (18-5)
-      else {
-        return AppImages.moon;
-      }
-    }
-
     return Scaffold(
-      backgroundColor: const Color(0xFF000000),
+      backgroundColor: AppColors.black,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.05,
-                    vertical: safeAreaHeight * 0.015,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Top Bar
+              AppBarWidget(
+                selectedDay: selectedDay,
+                focusedDay: focusedDay,
+                onDaySelected: (selected, focused) {
+                  setState(() {
+                    selectedDay = selected;
+                    focusedDay = focused;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 18),
+
+              // Greeting & Date
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${_getGreeting()}, Alex",
+                          style: GoogleFonts.mulish(
+                            color: Colors.white.withValues(alpha: 0.6),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Today, ${selectedDay.day} ${CalendarUtils.monthName(selectedDay.month)} ${selectedDay.year}",
+                          style: GoogleFonts.manrope(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppBarWidget(
-                        selectedDay: selectedDay,
-                        focusedDay: focusedDay,
-                        onDaySelected: (selected, focused) {
-                          setState(() {
-                            selectedDay = selected;
-                            focusedDay = focused;
-                          });
-                        },
+                  const SizedBox(width: 8),
+
+                  // Weather / Time Chip
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.08),
                       ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          _getTimeBasedIcon(),
+                          width: 16,
+                          height: 16,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          "9°C",
+                          style: GoogleFonts.manrope(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
 
-                      SizedBox(height: safeAreaHeight * 0.02),
+              const SizedBox(height: 16),
 
-                      Text(
-                        "Today, ${selectedDay.day} ${CalendarUtils.monthName(selectedDay.month)} ${selectedDay.year}",
+              // Interactive Week Day Selector Strip
+              MiniCalendarWidget(
+                currentWeekDays: currentWeekDays,
+                selectedDay: selectedDay,
+                focusedDay: focusedDay,
+                onDaySelected: (selected, focused) {
+                  setState(() {
+                    selectedDay = selected;
+                    focusedDay = focused;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 22),
+
+              // Workouts Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppTexts.workout,
+                    style: GoogleFonts.mulish(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  Text(
+                    "1 Planned",
+                    style: GoogleFonts.mulish(
+                      color: const Color(0xFF00C896),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
+
+              WorkoutCardWidget(
+                selectedDay: selectedDay,
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: const Color(0xFF1E1E28),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      content: Text(
+                        "Upper Body Blitz: 4 exercises scheduled for today.",
                         style: GoogleFonts.mulish(
                           color: Colors.white,
-                          fontSize: screenWidth * 0.04,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
                         ),
                       ),
+                    ),
+                  );
+                },
+              ),
 
-                      SizedBox(height: safeAreaHeight * 0.015),
+              const SizedBox(height: 22),
 
-                      MiniCalendarWidget(
-                        currentWeekDays: currentWeekDays,
-                        selectedDay: selectedDay,
-                        focusedDay: focusedDay,
-                        onDaySelected: (selected, focused) {
-                          setState(() {
-                            selectedDay = selected;
-                            focusedDay = focused;
-                          });
-                        },
-                      ),
-
-                      SizedBox(height: safeAreaHeight * 0.02),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            AppTexts.workout,
-                            style: AppTextStyles.custom(
-                              context: context,
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.06,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Image.asset(
-                                getTimeBasedIcon(),
-                                width: screenWidth * 0.06,
-                                height: screenWidth * 0.06,
-                              ),
-                              SizedBox(width: screenWidth * 0.02),
-                              Text(
-                                "9°",
-                                style: AppTextStyles.custom(
-                                  context: context,
-                                  color: Colors.white,
-                                  fontSize: screenWidth * 0.06,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: safeAreaHeight * 0.015),
-
-                      WorkoutCardWidget(
-                        selectedDay: selectedDay,
-                        height: safeAreaHeight * 0.11,
-                      ),
-
-                      SizedBox(height: safeAreaHeight * 0.02),
-
-                      Text(
-                        AppTexts.insights,
-                        style: AppTextStyles.custom(
-                          context: context,
-                          color: Colors.white,
-                          fontSize: screenWidth * 0.06,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-
-                      SizedBox(height: safeAreaHeight * 0.02),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CaloriesCardWidget(
-                              height: safeAreaHeight * 0.18,
-                            ),
-                          ),
-                          SizedBox(width: screenWidth * 0.04),
-                          Expanded(
-                            child: WeightCardWidget(
-                              height: safeAreaHeight * 0.18,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: safeAreaHeight * 0.02),
-
-                      HydrationCardWidget(height: safeAreaHeight * 0.19),
-                    ],
-                  ),
+              // Insights Section Header
+              Text(
+                AppTexts.insights,
+                style: GoogleFonts.mulish(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
                 ),
               ),
-            );
-          },
+
+              const SizedBox(height: 12),
+
+              // Calories & Weight Cards Side by Side
+              const Row(
+                children: [
+                  Expanded(child: CaloriesCardWidget()),
+                  SizedBox(width: 12),
+                  Expanded(child: WeightCardWidget()),
+                ],
+              ),
+
+              const SizedBox(height: 14),
+
+              // Hydration Card
+              const HydrationCardWidget(),
+
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );
