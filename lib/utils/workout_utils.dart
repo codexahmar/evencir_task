@@ -10,6 +10,7 @@ class WorkoutUtils {
       "icon": weekDays[fromIndex]["icon"],
       "title": weekDays[fromIndex]["title"],
       "duration": weekDays[fromIndex]["duration"],
+      "exercises": weekDays[fromIndex]["exercises"],
     };
 
     weekDays[fromIndex].remove("workoutType");
@@ -17,6 +18,7 @@ class WorkoutUtils {
     weekDays[fromIndex].remove("icon");
     weekDays[fromIndex].remove("title");
     weekDays[fromIndex].remove("duration");
+    weekDays[fromIndex].remove("exercises");
     weekDays[fromIndex]["hasWorkout"] = false;
 
     weekDays[toIndex]["hasWorkout"] = true;
@@ -25,5 +27,6 @@ class WorkoutUtils {
     weekDays[toIndex]["icon"] = workout["icon"];
     weekDays[toIndex]["title"] = workout["title"];
     weekDays[toIndex]["duration"] = workout["duration"];
+    weekDays[toIndex]["exercises"] = workout["exercises"];
   }
 }

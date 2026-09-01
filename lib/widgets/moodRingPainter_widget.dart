@@ -1,32 +1,42 @@
 import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class MoodRingPainter extends CustomPainter {
+  final double activeAngle;
+  final Color activeColor;
+
+  MoodRingPainter({
+    this.activeAngle = 0,
+    this.activeColor = const Color(0xFF6EB9AD),
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
     final Offset center = Offset(size.width / 2, size.height / 2);
-    final double ringThickness = size.width * 0.1;
-    final double radius = size.width / 2 - ringThickness / 2;
+    final double ringThickness = size.width * 0.085;
+    final double radius = size.width / 2 - ringThickness / 2 - 4;
 
-    final gradient = SweepGradient(
+    const gradient = SweepGradient(
       startAngle: 0,
       endAngle: 2 * pi,
-      colors: const [
-        Color(0xFF6EB9AD),
-        Color(0xFF8FC1B8),
-        Color(0xFFC9BBEF),
-        Color(0xFFD5B6E8),
-        Color(0xFFF28DB3),
-        Color(0xFFF59F7A),
-        Color(0xFFF99955),
-        Color(0xFF7CC0A9),
-        Color(0xFF6EB9AD),
+      colors: [
+        Color(0xFF6EB9AD), // Calm
+        Color(0xFFC9BBEF), // Content
+        Color(0xFFF28DB3), // Peaceful
+        Color(0xFFF99955), // Happy
+        Color(0xFF6EB9AD), // Wrap around
       ],
-      stops: const [0.0, 0.12, 0.25, 0.37, 0.5, 0.62, 0.75, 0.87, 1.0],
+      stops: [0.0, 0.25, 0.5, 0.75, 1.0],
     );
 
+    // Subtle background track
+    final bgPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.08)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = ringThickness;
+    canvas.drawCircle(center, radius, bgPaint);
+
+    // Glowing main sweep ring
     final ringPaint = Paint()
       ..shader = gradient.createShader(
         Rect.fromCircle(center: center, radius: radius),
@@ -37,25 +47,26 @@ class MoodRingPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, ringPaint);
 
+    // Tick divider marks
     final dividerPaint = Paint()
-      ..color = Colors.white.withOpacity(0.8)
-      ..strokeWidth = size.width * 0.005;
+      ..color = Colors.black.withValues(alpha: 0.5)
+      ..strokeWidth = 2.0;
 
     final double innerRadius = radius - ringThickness / 2;
     final double outerRadius = radius + ringThickness / 2;
-    const int totalDividers = 30;
+    const int totalDividers = 36;
     const double gapAngle = (2 * pi) / totalDividers;
 
     for (int i = 0; i < totalDividers; i++) {
-      if (i % 2 == 0) {
-        final double angle = i * gapAngle;
+      if (i % 3 == 0) {
+        final double a = i * gapAngle;
         final Offset start = Offset(
-          center.dx + innerRadius * cos(angle),
-          center.dy + innerRadius * sin(angle),
+          center.dx + innerRadius * cos(a),
+          center.dy + innerRadius * sin(a),
         );
         final Offset end = Offset(
-          center.dx + outerRadius * cos(angle),
-          center.dy + outerRadius * sin(angle),
+          center.dx + outerRadius * cos(a),
+          center.dy + outerRadius * sin(a),
         );
         canvas.drawLine(start, end, dividerPaint);
       }
@@ -63,5 +74,7 @@ class MoodRingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant MoodRingPainter oldDelegate) =>
+      oldDelegate.activeAngle != activeAngle ||
+      oldDelegate.activeColor != activeColor;
 }

@@ -1,90 +1,145 @@
+import 'package:evencir_task/constants/app_colors.dart';
 import 'package:evencir_task/constants/app_images.dart';
-import 'package:evencir_task/constants/app_text_styles.dart';
 import 'package:evencir_task/constants/app_texts.dart';
 import 'package:evencir_task/utils/calendar_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WorkoutCardWidget extends StatelessWidget {
   final DateTime selectedDay;
-  final double height;
+  final double? height;
+  final VoidCallback? onTap;
 
   const WorkoutCardWidget({
     super.key,
     required this.selectedDay,
-    required this.height,
+    this.height,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    return SizedBox(
-      width: double.infinity,
-      height: height,
-      child: Row(
-        children: [
-          Container(
-            width: screenWidth * 0.02,
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(147, 33, 205, 243),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-              ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.08),
+              width: 1,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.35),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF18181C),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: [
+              // Left Glowing Strip
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 5,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF00C896),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(14),
+                      bottomLeft: Radius.circular(14),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xFF00C896),
+                        blurRadius: 8,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              child: Padding(
-                padding: EdgeInsets.all(screenWidth * 0.03),
+
+              // Workout Info Content
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 14, 14, 14),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "${CalendarUtils.formattedDate(selectedDay)} - 25m - 30m",
-                            style: AppTextStyles.custom(
-                              context: context,
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.03,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                CalendarUtils.formattedDate(selectedDay),
+                                style: GoogleFonts.mulish(
+                                  color: Colors.white.withValues(alpha: 0.6),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Container(
+                                width: 4,
+                                height: 4,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white38,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                "25m - 30m",
+                                style: GoogleFonts.mulish(
+                                  color: const Color(0xFF00C896),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: height * 0.1),
+                          const SizedBox(height: 4),
                           Text(
                             AppTexts.upperBody,
-                            style: AppTextStyles.custom(
-                              context: context,
+                            style: GoogleFonts.mulish(
                               color: Colors.white,
-                              fontSize: screenWidth * 0.06,
+                              fontSize: 19,
                               fontWeight: FontWeight.w700,
+                              letterSpacing: -0.2,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Image.asset(
-                      AppImages.arrowIcon,
-                      width: screenWidth * 0.06,
-                      height: screenWidth * 0.06,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.06),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        AppImages.arrowIcon,
+                        width: 14,
+                        height: 14,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
